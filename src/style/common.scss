@@ -1,0 +1,31 @@
+/* Common classes to use through all the projet */
+._fullscreen {
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+._fill {
+	position: absolute;
+	z-index: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+._flex_v {
+	display: flex;
+	align-items: center;
+	flex-flow: column nowrap;
+	justify-content: center;
+}
+
+._flex_h {
+	display: flex;
+	align-items: center;
+	flex-flow: row nowrap;
+	justify-content: center;
+}
+

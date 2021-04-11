@@ -1,0 +1,11 @@
+_OUTPUT_
+.generated
+.generation_cache.json
+
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+
+.key_*

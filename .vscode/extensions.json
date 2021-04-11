@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "editorconfig.editorconfig",
+    "codezombiech.gitignore",
+    "mrmlnc.vscode-apache",
+    "slevesque.shader",
+    "dbaeumer.vscode-eslint",
+    "stylelint.vscode-stylelint",
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "wix.vscode-import-cost",
+    "digitalbrainstem.javascript-ejs-support",
+    "toba.vsfire"
+  ]
+}

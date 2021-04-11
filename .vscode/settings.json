@@ -1,0 +1,38 @@
+{
+  "files.exclude": {
+    // ".*": true
+  },
+  "editor.autoClosingQuotes": "always",
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": false,
+  "editor.insertSpaces": false,
+  "editor.renderWhitespace": "all",
+  "editor.tabCompletion": "on",
+  "editor.tabSize": 4,
+  "emmet.includeLanguages": {
+    "njk": "html",
+    "twig": "html",
+    "ejs": "html",
+  },
+  "files.associations": {
+    "*.html": "twig",
+    ".stylelintrc": "json"
+  },
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "html.format.enable": false,
+  "javascript.validate.enable": false,
+  "javascript.format.enable": false,
+  "telemetry.enableTelemetry": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true
+  },
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "stylelint.validate": [
+    "css",
+    "scss",
+    "vue"
+  ]
+}

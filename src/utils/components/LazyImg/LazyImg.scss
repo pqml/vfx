@@ -1,0 +1,49 @@
+.image--lazy {
+	--image-bg-color: #dde1e7;
+	--image-height: 56.25%;
+
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+	background: var(--image-bg-color);
+	transform: translate3d(0, 0, 0);
+
+	&.full-height {
+		height: 100%;
+	}
+
+	&:not(.full-height)::after {
+		display: block;
+		visibility: hidden;
+		width: 100%;
+		padding-top: var(--image-height);
+		content: "";
+	}
+
+	& img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: calc(100% + 2px);
+		// opacity: 0;
+		user-select: none;
+		// transform: scale(1.1);
+		pointer-events: none;
+		object-fit: cover;
+	}
+
+	&.contain {
+		background: transparent;
+
+		img {
+			object-fit: contain;
+		}
+	}
+
+	// &.loaded img {
+	// 	opacity: 1;
+	// 	transform: none;
+	// 	transition: 300ms opacity, transform 900ms cubic-bezier(0, .7, .085, 1);
+	// }
+}

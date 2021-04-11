@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es2017",
+    "paths": {
+      "~/*": ["./src/*"],
+      "~~/*": ["./*"]
+    }
+  },
+  "exclude": ["node_modules"],
+  "skipLibCheck": true,
+  "forceConsistentCasingInFileNames": true
+}
