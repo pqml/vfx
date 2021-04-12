@@ -25,6 +25,14 @@ export default class App extends BaseComponent {
 		this.storeSubscribe(Store.nightMode, nightMode => {
 			html.classList.toggle('nightmode', !!nightMode);
 		});
+
+		this.storeSubscribe(Store.panning, panning => {
+			html.classList.toggle('panning', !!panning);
+		});
+
+		this.storeSubscribe(Store.grabbing, grabbing => {
+			html.classList.toggle('grabbing', !!grabbing);
+		});
 	}
 
 	changeCurrentView(hasName) {

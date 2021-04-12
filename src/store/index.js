@@ -22,9 +22,16 @@ const Store = {
 	frames: w([]),
 	frame: null,
 
+
 	previewData: w(null),
 
-	shiftPressed: w(false),
+	keyPressed: w({}),
+	pointerDown: w(false),
+	panning: false,
+	grabbing: false,
+	zoomOffset: w(0),
+	panOffset: w([ 0, 0 ]),
+
 	wireframeMode: w(true),
 	nightMode: w(!!localStorage.getItem('nightmode')),
 	helpVisible: w(false)
@@ -55,11 +62,25 @@ Store.canvasSize = computed(
 		const w = size[ 0 ];
 		const h = size[ 1 ];
 		const r = w / h;
+
 		const scale = 0.9;
+
 		const cw = (r > ratio ? h * ratio : w) * scale;
 		const ch = (r > ratio ? h : w * (1 / ratio)) * scale;
 		return [ Math.round(cw), Math.round(ch) ];
 	}
 );
+
+Store.panning = computed(
+	Store.keyPressed,
+	key => !!key.SPACE
+);
+
+Store.grabbing = computed(
+	[ Store.panning, Store.pointerDown ],
+	(panning, pointerDown) => panning && pointerDown
+);
+
+window.store = Store;
 
 export default Store;

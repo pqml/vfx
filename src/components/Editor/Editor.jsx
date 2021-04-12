@@ -24,7 +24,11 @@ const Commands = {
 	'ARROWRIGHT': 'nextFrame',
 	'ARROWLEFT': 'previousFrame',
 	'BACKSPACE': 'removePoint',
-	'SHIFT': 'shiftPressed'
+	'0': 'resetWorkspace',
+	'O': 'resetWorkspace',
+	'SPACE': 'noop',
+	'SHIFT': 'noop',
+	'ALT': 'noop'
 };
 
 const fakeLink = document.createElement('a');
@@ -39,6 +43,8 @@ Object.assign(fakeLink.style, {
 });
 
 export default class Editor extends BaseComponent {
+	noop() {}
+
 	template() {
 		return <section class="editor">
 			<EditorInfos />
@@ -49,32 +55,76 @@ export default class Editor extends BaseComponent {
 	}
 
 	afterRender() {
+		this.pointerX = 0;
+		this.pointerY = 0;
 		this.keysDown = {};
 		window.addEventListener('keydown', this.bind('onKeyDown', 1));
 		window.addEventListener('keyup', this.bind('onKeyUp', 1));
+		window.addEventListener('mousewheel', this.bind('onWheel', 1));
+		window.addEventListener('pointerdown', this.bind('onPointerDown', 1));
+		window.addEventListener('pointerup', this.bind('onPointerUp', 1));
+		window.addEventListener('pointerup', this.bind('onPointerUp', 1));
+		window.addEventListener('pointermove', this.bind('onPointerMove', 1));
 	}
 
 	beforeDestroy() {
+		window.removeEventListener('mousewheel', this.onWheel);
 		window.removeEventListener('keydown', this.onKeyDown);
 		window.removeEventListener('keyup', this.onKeyUp);
+		window.removeEventListener('pointerdown', this.onPointerDown);
+		window.removeEventListener('pointerup', this.onPointerUp);
+		window.removeEventListener('pointerup', this.onPointerUp);
+		window.removeEventListener('pointermove', this.onPointerMove);
+	}
+
+	onPointerDown(e) {
+		this.pointerX = e.screenX;
+		this.pointerY = e.screenY;
+		Store.pointerDown.set(true);
+	}
+
+	onPointerUp() {
+		Store.pointerDown.set(false);
+	}
+
+	onPointerMove(e) {
+		if (!Store.grabbing.current) return;
+		const pan = Store.panOffset.current;
+		const scale = Math.pow(2, Store.zoomOffset.current);
+		pan[ 0 ] += (e.screenX - this.pointerX) / scale;
+		pan[ 1 ] += (e.screenY - this.pointerY) / scale;
+		this.pointerX = e.screenX;
+		this.pointerY = e.screenY;
+		Store.panOffset.set(pan, true);
+	}
+
+	onWheel(e) {
+		if (!Store.keyPressed.current.SPACE) return;
+		const delta = -e.deltaY / 300;
+		Store.zoomOffset.set(Store.zoomOffset.current + delta);
+	}
+
+	resetWorkspace() {
+		Store.zoomOffset.set(0);
+		const pan = Store.panOffset.current;
+		pan[ 0 ] = 0;
+		pan[ 1 ] = 0;
+		Store.panOffset.set(pan, true);
 	}
 
 	onKeyDown(e) {
-		const key = e.key.toUpperCase();
+		const key = e.key === ' ' ? 'SPACE' : e.key.toUpperCase();
 		if (!Commands[ key ] || this.keysDown[ key ]) return;
 		if (!TurboMode.includes(key)) this.keysDown[ key ] = true;
+		Store.keyPressed.set(this.keysDown, true);
 		this[ Commands[ key ] ]();
 	}
 
 	onKeyUp(e) {
-		const key = e.key.toUpperCase();
+		const key = e.key === ' ' ? 'SPACE' : e.key.toUpperCase();
 		if (!Commands[ key ]) return;
 		this.keysDown[ key ] = false;
-		if (key === 'SHIFT') Store.shiftPressed.set(false);
-	}
-
-	shiftPressed() {
-		Store.shiftPressed.set(true);
+		Store.keyPressed.set(this.keysDown, true);
 	}
 
 	previewSfx() {

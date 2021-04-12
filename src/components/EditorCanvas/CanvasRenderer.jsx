@@ -41,11 +41,11 @@ export default class CanvasRenderer extends BaseComponent {
 	}
 
 	onClick(e) {
-		const size = Store.canvasSize.current;
-		const x = e.layerX;
-		const y = e.layerY;
-		const nx = x / size[ 0 ];
-		const ny = y / size[ 1 ];
+		const bounds = this.refs.canvas.getBoundingClientRect();
+		const x = e.clientX - bounds.x;
+		const y = e.clientY - bounds.y;
+		const nx = x / bounds.width;
+		const ny = y / bounds.height;
 
 		const frame = Store.frame.current;
 		if (!frame) return;

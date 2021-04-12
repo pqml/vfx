@@ -12,6 +12,9 @@
 
 	canvas {
 		display: block;
+	}
+
+	html:not(.panning) & canvas {
 		cursor: crosshair;
 	}
 

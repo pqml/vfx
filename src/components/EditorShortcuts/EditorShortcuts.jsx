@@ -34,8 +34,12 @@ export default class EditorShortcuts extends BaseComponent {
 					text="Preview sfx"
 				/>
 				<Shortcut
-					key="Space"
-					text="Pan workspace"
+					key="Space + Mouse"
+					text="Pan and zoom workspace"
+				/>
+				<Shortcut
+					key="0"
+					text="Reset zoom and space"
 				/>
 				<Shortcut
 					key="←&nbsp;→"

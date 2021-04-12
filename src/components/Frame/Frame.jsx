@@ -50,7 +50,9 @@ export default class Frame {
 	}
 
 	addPoint(x, y) {
-		const shiftPressed = Store.shiftPressed.current;
+		const shiftPressed = !!Store.keyPressed.current.SHIFT;
+		const spacePressed = !!Store.keyPressed.current.SPACE;
+		if (spacePressed) return;
 		if (this.shapeIndex < 0 || shiftPressed) this.addShape();
 		const points = this.shapes[ this.shapeIndex ];
 		points.push([ x, y ]);
