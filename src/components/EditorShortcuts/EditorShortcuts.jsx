@@ -27,11 +27,11 @@ export default class EditorShortcuts extends BaseComponent {
 				/>
 				<Shortcut
 					key="S"
-					text="Export sfx"
+					text="Export vfx"
 				/>
 				<Shortcut
 					key="Enter"
-					text="Preview sfx"
+					text="Preview vfx"
 				/>
 				<Shortcut
 					key="Space + Mouse"

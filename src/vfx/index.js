@@ -4,7 +4,7 @@ const activePool = new Set();
 let dt = 16.67;
 let lastTime = performance.now();
 let initialized = false;
-const renderSfx = sfx => sfx.render(dt);
+const renderVfx = vfx => vfx.render(dt);
 
 const INITIAL_POOL = 10;
 const DEBUG = true;
@@ -13,7 +13,7 @@ function init() {
 	if (initialized) return;
 	initialized = true;
 	for (let i = 0; i < INITIAL_POOL; i++) {
-		freePool.push(new Sfx());
+		freePool.push(new Vfx());
 	}
 
 	render();
@@ -24,18 +24,18 @@ function render() {
 	dt = now - lastTime;
 	lastTime = now;
 	requestAnimationFrame(render);
-	activePool.forEach(renderSfx);
+	activePool.forEach(renderVfx);
 }
 
 function create(opts = {}) {
 	init();
-	const sfx = freePool.pop() || new Sfx();
-	activePool.add(sfx);
-	sfx.reset(opts);
-	return sfx;
+	const vfx = freePool.pop() || new Vfx();
+	activePool.add(vfx);
+	vfx.reset(opts);
+	return vfx;
 }
 
-class Sfx {
+class Vfx {
 	constructor() {
 		this.frameDuration = 33;
 		this.canvas = document.createElement('canvas');
@@ -129,7 +129,7 @@ class Sfx {
 			this.canvas.parentNode.removeChild(this.canvas);
 		}
 		if (DEBUG) {
-			console.log('Release Sfx - pool length: ', freePool.length);
+			console.log('Release Vfx - pool length: ', freePool.length);
 		}
 	}
 }

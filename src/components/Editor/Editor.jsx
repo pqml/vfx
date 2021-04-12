@@ -15,9 +15,9 @@ const TurboMode = [
 ];
 
 const Commands = {
-	'ENTER': 'previewSfx',
+	'ENTER': 'previewVfx',
 	'H': 'toggleHelp',
-	'S': 'exportSfx',
+	'S': 'exportVfx',
 	'W': 'toggleWireframe',
 	'N': 'toggleNightMode',
 	'Z': 'removePoint',
@@ -127,7 +127,7 @@ export default class Editor extends BaseComponent {
 		Store.keyPressed.set(this.keysDown, true);
 	}
 
-	previewSfx() {
+	previewVfx() {
 		const data = this.getData();
 		Store.previewData.set(Store.previewData.current ? null : data);
 	}
@@ -136,7 +136,7 @@ export default class Editor extends BaseComponent {
 		Store.helpVisible.set(!Store.helpVisible.current);
 	}
 
-	exportSfx() {
+	exportVfx() {
 		const data = this.getData();
 		const header = 'data:text/json;charset=utf-8,';
 		const dataStr = header + encodeURIComponent(JSON.stringify(data));

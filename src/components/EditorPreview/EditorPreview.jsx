@@ -1,9 +1,9 @@
 import Store from '~/store';
 import BaseComponent from '~/utils/components/BaseComponent/BaseComponent';
 import computed from '~/utils/state/computed';
+import vfx from '~/vfx';
 
 import './EditorPreview.scss';
-import sfx from './sfx';
 
 export default class EditorPreview extends BaseComponent {
 	beforeRender(props, state) {
@@ -29,10 +29,10 @@ export default class EditorPreview extends BaseComponent {
 	}
 
 	onPreview(data) {
-		if (this.sfx) this.sfx.destroy();
-		this.sfx = null;
+		if (this.vfx) this.vfx.destroy();
+		this.vfx = null;
 		if (!data) return;
-		this.sfx = sfx.create({
+		this.vfx = vfx.create({
 			data,
 			loop: true,
 			parent: this.refs.wrapper,
@@ -42,7 +42,7 @@ export default class EditorPreview extends BaseComponent {
 	}
 
 	beforeDestroy() {
-		if (this.sfx) this.sfx.destroy();
-		this.sfx = null;
+		if (this.vfx) this.vfx.destroy();
+		this.vfx = null;
 	}
 }

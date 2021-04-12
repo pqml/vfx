@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "sfxmaker",
+  "name": "vfxmaker",
   "sideEffects": "*.scss",
   "version": "0.0.1",
   "engines": {
