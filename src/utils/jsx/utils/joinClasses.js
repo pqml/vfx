@@ -1,4 +1,4 @@
-import { fastObject } from '@mm/fast';
+import { fastObject } from '~/utils/fast';
 
 export default function joinClasses(...classes) {
 	let needsObject = false;

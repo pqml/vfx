@@ -1,15 +1,4 @@
-let counter = 0;
-
-export function getSignalCount() {
-	return counter;
-}
-
-/// #if DEBUG
-window._signalCount = () => getSignalCount();
-/// #endif
-
 function SignalListener(owner, fn, ctx, once) {
-	counter++;
 	this.fn = fn;
 	this.ctx = ctx || null;
 	this.owner = owner;
@@ -17,7 +6,6 @@ function SignalListener(owner, fn, ctx, once) {
 }
 
 function removeNode(owner, node) {
-	counter--;
 	if (node.prev) node.prev.next = node.next;
 	if (node.next) node.next.prev = node.prev;
 	node.ctx = node.fn = node.owner = null;
@@ -41,12 +29,6 @@ class Signal {
 	}
 
 	subscribe(fn, ctx, once) {
-		/// #if DEBUG
-		if (typeof fn !== 'function') {
-			throw new Error('Callback is not a function');
-		}
-		/// #endif
-
 		const node = new SignalListener(this, fn, ctx, once);
 		if (!this._first) {
 			this._first = node;

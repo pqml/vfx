@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "target": "es2017",
+    "target": "esnext",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
     "paths": {
       "~/*": ["./src/*"],
       "~~/*": ["./*"]
@@ -9,5 +13,6 @@
   },
   "exclude": ["node_modules"],
   "skipLibCheck": true,
-  "forceConsistentCasingInFileNames": true
+  "forceConsistentCasingInFileNames": true,
+  "compileOnSave": false
 }

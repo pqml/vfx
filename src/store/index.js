@@ -1,26 +1,65 @@
-import { readonly, shallowRef, computed, reactive } from 'vue';
+import { computed, s, w } from '~/utils/state/index';
 
-const store = reactive({
-	currentGear: null,
+const Store = {
+	tick: s(),
 
-	gearCategories: readonly([
-		'Accessories',
-		'Body',
-		'BodyPaint',
-		'Face',
-		'Head',
-		'Shoes'
-	]),
+	triggerResize: s(),
+	screenPixelRatio: w(1),
+	viewportSize: w([ 10, 10 ]),
+	viewportRatio: w(1),
+	canvasSize: null,
 
-	loading: false,
+	initialized: w(false),
 
-	list: shallowRef(null),
+	sourceName: w(null),
+	sourceWidth: w(10),
+	sourceHeight: w(10),
+	sourceRatio: null,
 
-	appLoaded: computed(() => {
-		return !!store.list;
-	}),
+	rerender: w(false),
+	frameIndex: w(0),
+	framesCount: null,
+	frames: w([]),
+	frame: null,
 
-	currentPreview: shallowRef(null)
+	previewData: w(null),
+
+	shiftPressed: w(false),
+	wireframeMode: w(true),
+	nightMode: w(!!localStorage.getItem('nightmode')),
+	helpVisible: w(false)
+};
+
+Store.nightMode.subscribe(v => {
+	localStorage.setItem('nightmode', v ? 1 : 0);
 });
 
-export default store;
+Store.framesCount = computed(
+	Store.frames,
+	frames => frames ? frames.length : 0
+);
+
+Store.sourceRatio = computed(
+	[ Store.sourceWidth, Store.sourceHeight ],
+	(w, h) => w / h
+);
+
+Store.frame = computed(
+	[ Store.frameIndex, Store.frames ],
+	(index, frames) => frames[ index ] || null
+);
+
+Store.canvasSize = computed(
+	[ Store.viewportSize, Store.sourceRatio ],
+	(size, ratio) => {
+		const w = size[ 0 ];
+		const h = size[ 1 ];
+		const r = w / h;
+		const scale = 0.9;
+		const cw = (r > ratio ? h * ratio : w) * scale;
+		const ch = (r > ratio ? h : w * (1 / ratio)) * scale;
+		return [ Math.round(cw), Math.round(ch) ];
+	}
+);
+
+export default Store;

@@ -16,13 +16,7 @@ class Writable extends Readable {
 	_dispatch() {
 		let node = this._first;
 		while (node) {
-			/// #if DEBUG
-			try { node.fn.call( node.ctx, this.current, this.previous ); } // eslint-disable-line
-			catch ( err ) { console.error( err ); } // eslint-disable-line
-			/// #else
 			node.fn.call(node.ctx, this.current, this.previous);
-			/// #endif
-
 			node.once && this.unsubscribe(node);
 			node = node.next;
 		}

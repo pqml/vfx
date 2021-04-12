@@ -1,4 +1,4 @@
-import { fastObject } from '@mm/fast';
+import { fastObject } from '~/utils/fast';
 
 const EMPTY = [];
 

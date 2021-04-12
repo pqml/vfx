@@ -1,15 +1,31 @@
-:root {
+html {
+	--z-editor-preview: 4;
+	--z-editor-help: 3;
+	--z-editor-infos: 2;
+	--z-editor-canvas: 1;
+	--z-import-zone: 0;
+
 	--c-green: #26dc4e;
 	--c-green-light: #77dd86;
-
 	--c-yellow: #fff310;
 	--c-yellow-light: #ffffb3;
-
 	--c-red: #f03008;
 	--c-red-light: #ffb6c1;
-
 	--c-white: #fff;
-	--c-gray-light: #cfcfcf;
+	--c-gray-light: #dedede;
 	--c-gray: #b8b8b8;
+	--c-gray-dark: #999;
 	--c-black: #060600;
+	--c-overlay-fade: rgba(255, 255, 255, 0.9);
+
+	--padding: 3vw;
+}
+
+html.nightmode {
+	--c-black: #fff;
+	--c-white: #060600;
+	--c-gray-dark: #888;
+	--c-gray: #666;
+	--c-gray-light: #252525;
+	--c-overlay-fade: rgba(0, 0, 0, 0.9);
 }

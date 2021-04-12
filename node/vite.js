@@ -1,4 +1,6 @@
 const paths = require('./paths');
+const autoprefixer = require('autoprefixer');
+const sortMediaQueries = require('postcss-sort-media-queries');
 
 module.exports = function createViteConfig() {
 	return {
@@ -10,6 +12,29 @@ module.exports = function createViteConfig() {
 				'~/': paths.src + '/',
 				'~~/': paths.root + '/'
 			}
+		},
+		css: {
+			postcss: {
+				plugins: [
+					autoprefixer({ grid: true }),
+					sortMediaQueries({ sort: 'mobile-first' })
+				]
+			},
+			preprocessorOptions: {
+				scss: {
+					additionalData: `
+						@import "~/style/__imports";
+					`,
+					sassOptions: {
+						outputStyle: 'compressed'
+					}
+				}
+			}
+		},
+		esbuild: {
+			jsxFactory: 'h',
+			jsxFragment: 'h.f',
+			jsxInject: `import { h } from '~/utils/jsx'`
 		},
 		server: {},
 		build: {

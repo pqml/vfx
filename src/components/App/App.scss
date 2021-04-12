@@ -1,0 +1,30 @@
+@import "~/style/reset.scss";
+@import "~/style/variables.scss";
+@import "~/style/common.scss";
+
+html {
+	pointer-events: none;
+}
+
+body {
+	background: var(--c-white);
+	font-family: "Inter", sans-serif;
+	font-size: 12px;
+	color: var(--c-black);
+	user-select: none;
+}
+
+.app {
+	font-weight: 500;
+}
+
+.app-content {
+	display: flex;
+	align-items: flex-start;
+	flex-flow: row wrap;
+	justify-content: flex-start;
+
+	& > *:not(:last-child) {
+		margin-right: 2vw;
+	}
+}

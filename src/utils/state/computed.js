@@ -6,31 +6,24 @@ function computed(observables, cb) {
 	const setValue = value.set.bind(value);
 	delete value.set;
 
-	const isArray = Array.isArray(observables);
-	let values = isArray ? (new Array(observables.length)) : null;
+	observables = Array.isArray(observables) ? observables : [ observables ];
+	const values = new Array(observables.length);
 	let unsubs = [];
 
-	if (isArray) {
-		for (let i = 0, l = observables.length; i < l; i++) {
-			const signal = observables[ i ];
+	for (let i = 0, l = observables.length; i < l; i++) {
+		const signal = observables[ i ];
 			const cb = function ( v ) { values[ i ] = v; derive(); } // eslint-disable-line
-			values[ i ] = signal.current;
-			signal.subscribe(cb);
-			unsubs.push(signal, cb);
-		}
-	} else {
-		const signal = observables;
-		const cb = function ( v ) { values = v; derive(); } // eslint-disable-line
-		values = signal.current;
+		values[ i ] = signal.current;
 		signal.subscribe(cb);
 		unsubs.push(signal, cb);
 	}
+
 
 	value.destroy = destroy;
 	derive();
 
 	function derive() {
-		const result = cb(values);
+		const result = cb.apply(null, values);
 		if (result && result.then) result.then(setValue);
 		else setValue(result);
 	}

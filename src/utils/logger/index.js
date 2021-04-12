@@ -4,7 +4,6 @@ function noop() {}
 const noopObj = { log: noop, warn: noop, error: noop };
 let logger = () => noopObj;
 
-/// #if DEBUG
 logger = function logger(prefix, color, background, mute) {
 	if (mute) return noopObj;
 
@@ -25,6 +24,5 @@ logger = function logger(prefix, color, background, mute) {
 		error: console.error.bind(console, ...pre)
 	};
 };
-/// #endif
 
 export default logger;

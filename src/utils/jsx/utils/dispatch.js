@@ -1,7 +1,3 @@
-/// #if DEBUG
-import domEventsCounter from './domEventsCounter';
-/// #endif
-
 export function dispatch(component, cb, topDown) {
 	const subs = component._collector && component._collector.components;
 	if (topDown) cb(component);
@@ -29,9 +25,6 @@ function callListeners(component) {
 		component._collector.listeners.push(listener);
 		if (listener.type === 'dom') {
 			listener.el.addEventListener(listener.evt, listener.fn, listener.capture);
-			/// #if DEBUG
-			domEventsCounter.value++;
-			/// #endif
 		} else if (listener.type === 'store') {
 			const oldfn = listener.fn;
 			listener.fn = function ( v ) { oldfn( v, listener.el  ) }; // eslint-disable-line

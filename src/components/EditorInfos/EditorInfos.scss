@@ -1,0 +1,21 @@
+.editor-infos {
+	position: fixed;
+	z-index: var(--z-editor-infos);
+	top: var(--padding);
+	left: var(--padding);
+
+	li:not(:first-child) {
+		margin-top: 0.7em;
+	}
+
+	.editor-info {
+		.info-label {
+			color: var(--c-gray-dark);
+		}
+	}
+
+	.editor-info.frame .info-value {
+		// font-size: 1.5em;
+		font-variant-numeric: tabular-nums;
+	}
+}

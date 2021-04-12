@@ -1,9 +1,5 @@
 import logger from '../logger';
 
-/// #if DEBUG
-import domEventsCounter from './utils/domEventsCounter';
-/// #endif
-
 import _render from './render';
 
 export default class Component {
@@ -146,9 +142,6 @@ export default class Component {
 			const listener = this._collector.listeners[ i ];
 			if (listener.type === 'dom') {
 				listener.el.removeEventListener(listener.evt, listener.fn);
-				/// #if DEBUG
-				domEventsCounter.value--;
-				/// #endif
 			} else if (listener.type === 'store') {
 				listener.store.unsubscribe(listener.fn);
 			}
