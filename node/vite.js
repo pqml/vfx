@@ -7,6 +7,7 @@ module.exports = function createViteConfig() {
 		root: paths.src,
 		clearScreen: false,
 		publicDir: paths.static,
+		base: './',
 		resolve: {
 			alias: {
 				'~/': paths.src + '/',
