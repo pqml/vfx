@@ -5,12 +5,15 @@ import Store from '~/store';
 
 import ImportZone from '../ImportZone/ImportZone';
 import Editor from '../Editor/Editor';
+import Logo from '../Logo/Logo';
 
 const html = document.documentElement;
 
 export default class App extends BaseComponent {
 	template() {
-		return <main class="app" />;
+		return <main class="app">
+			<Logo/>
+		</main>;
 	}
 
 	afterRender() {

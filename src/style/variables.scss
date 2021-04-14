@@ -1,4 +1,5 @@
 html {
+	--z-logo: 5;
 	--z-editor-preview: 4;
 	--z-editor-help: 3;
 	--z-editor-infos: 2;
@@ -12,9 +13,9 @@ html {
 	--c-red: #f03008;
 	--c-red-light: #ffb6c1;
 	--c-white: #fff;
-	--c-gray-light: #dedede;
-	--c-gray: #b8b8b8;
-	--c-gray-dark: #999;
+	--c-gray-light: rgba(0, 0, 0, 0.15);
+	--c-gray: rgba(0, 0, 0, 0.3);
+	--c-gray-dark: rgba(0, 0, 0, 0.4);
 	--c-black: #060600;
 	--c-overlay-fade: rgba(255, 255, 255, 0.9);
 
@@ -24,8 +25,8 @@ html {
 html.nightmode {
 	--c-black: #fff;
 	--c-white: #060600;
-	--c-gray-dark: #888;
-	--c-gray: #666;
-	--c-gray-light: #252525;
+	--c-gray-dark: rgba(255, 255, 255, 0.5);
+	--c-gray: rgba(255, 255, 255, 0.4);
+	--c-gray-light: rgba(255, 255, 255, 0.2);
 	--c-overlay-fade: rgba(0, 0, 0, 0.9);
 }

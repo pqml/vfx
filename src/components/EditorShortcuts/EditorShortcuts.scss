@@ -1,9 +1,10 @@
 .editor-shortcuts {
+	--border-color: var(--c-black);
 	position: fixed;
 	z-index: var(--z-editor-help);
 	bottom: var(--padding);
 	left: var(--padding);
-	color: var(--c-gray);
+	color: var(--c-black);
 
 	.shortcut {
 		display: flex;
@@ -15,21 +16,27 @@
 		margin-top: 0.8em;
 	}
 
+
 	&:not(.visible) li:not(:first-child) {
 		display: none;
 	}
 
-	&:not(.visible) li:first-child span {
-		display: none;
+	&:not(.visible) li:first-child {
+		--border-color: var(--c-gray-dark);
+		color: var(--c-gray-dark);
+
+		span {
+			display: none;
+		}
 	}
 
 	.shortcut figure {
 		min-width: 2em;
 		margin-right: 0.8em;
 		padding: 0.4em 0.5em 0.5em;
-		border: 1px solid var(--c-gray);
+		border: 1px solid var(--border-color);
 		border-radius: 4px;
-		box-shadow: 0 1px 0 0 var(--c-gray);
+		box-shadow: 0 1px 0 0 var(--border-color);
 		font-size: 0.8em;
 		font-weight: 600;
 		line-height: 1em;
