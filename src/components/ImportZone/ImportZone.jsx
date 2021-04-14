@@ -28,11 +28,14 @@ export default class ImportZone extends BaseComponent {
 		const files = e.target.files;
 		for (let i = 0; i < files.length; i++) {
 			const file = files[ i ];
-			const result = file.name.match(/^(.*[a-z])([0-9]+)\.([a-z]{2,4})$/i);
-			if (!result) continue;
+			const result = file.name.match(/^(.*[^0-9])([0-9]+)?\.([a-z]{2,4})$/i);
+			if (!result) {
+				console.warn(`${ file.name } cannot be used. Please use image with a naming like Image001.png`);
+				continue;
+			}
 			promises.push(new Promise(resolve => {
 				name = result[ 1 ].trim();
-				const index = result[ 2 ];
+				const index = result[ 2 ] || 0;
 				const ext = result[ 3 ];
 				const mime = getMime(ext);
 				const reader = new FileReader();
@@ -53,6 +56,9 @@ export default class ImportZone extends BaseComponent {
 		await Promise.all(promises);
 
 		images = Object.keys(images).sort().map(k => images[ k ]);
+		if (!images) {
+			console.error('No image can be used.');
+		}
 		const width = images[ 0 ].naturalWidth;
 		const height = images[ 0 ].naturalHeight;
 
