@@ -7,7 +7,10 @@ import './EditorCanvas.scss';
 
 export default class EditorCanvas extends BaseComponent {
 	template() {
-		return <section class="editor-canvas">
+		return <section
+			class="editor-canvas"
+			onClick={this.bind('onClick', 1)}
+		>
 			<div
 				class="canvas-wrapper"
 				ref={this.ref('wrapper')}
@@ -27,6 +30,10 @@ export default class EditorCanvas extends BaseComponent {
 	onResize(size) {
 		this.refs.wrapper.style.width = size[ 0 ] + 'px';
 		this.refs.wrapper.style.height = size[ 1 ] + 'px';
+	}
+
+	onClick(e) {
+		if (this.refs.renderer) this.refs.renderer.onClick(e);
 	}
 
 	move() {

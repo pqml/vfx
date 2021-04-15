@@ -8,7 +8,6 @@ export default class CanvasRenderer extends BaseComponent {
 		return <div class="canvas-renderer">
 			<canvas
 				ref={this.ref('canvas')}
-				onClick={this.bind('onClick', 1)}
 			/>
 		</div>;
 	}
