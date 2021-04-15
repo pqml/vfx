@@ -6,8 +6,8 @@ const triggerUpdate = microdefer(() => {
 });
 
 export default class Frame {
-	constructor({ reference }) {
-		this.reference = reference;
+	constructor({ reference } = {}) {
+		this.reference = reference || null;
 		this.shapes = [];
 		this.shapeIndex = -1;
 	}
@@ -56,11 +56,11 @@ export default class Frame {
 		}
 	}
 
-	addPoint(x, y) {
+	addPoint(x, y, force) {
 		const shiftPressed = !!Store.keyPressed.current.SHIFT;
 		const spacePressed = !!Store.keyPressed.current.SPACE;
-		if (spacePressed) return;
-		if (this.shapeIndex < 0 || shiftPressed) this.addShape();
+		if (!force && spacePressed) return;
+		if (this.shapeIndex < 0 || (!force && shiftPressed)) this.addShape();
 		const points = this.shapes[ this.shapeIndex ];
 		points.push([ x, y ]);
 		triggerUpdate();

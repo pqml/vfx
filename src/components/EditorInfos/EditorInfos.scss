@@ -4,8 +4,16 @@
 	top: var(--padding);
 	left: var(--padding);
 
+	ul {
+		display: flex;
+		align-items: flex-start;
+		flex-flow: row;
+		justify-content: flex-start;
+	}
+
 	li:not(:first-child) {
-		margin-top: 0.7em;
+		// margin-top: 0.7em;
+		margin-left: 4em;
 	}
 
 	.editor-info {
@@ -18,5 +26,18 @@
 	.editor-info.frame .info-value {
 		// font-size: 1.5em;
 		font-variant-numeric: tabular-nums;
+	}
+
+	.editor-info input {
+		width: 3em;
+		border: 1px solid var(--c-gray);
+		border-radius: 5px;
+		text-align: center;
+		pointer-events: all;
+		apperance: none;
+	}
+
+	.editor-info input:focus {
+		border-color: var(--c-black);
 	}
 }

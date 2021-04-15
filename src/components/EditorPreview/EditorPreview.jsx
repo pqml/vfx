@@ -31,9 +31,12 @@ export default class EditorPreview extends BaseComponent {
 	onPreview(data) {
 		if (this.vfx) this.vfx.destroy();
 		this.vfx = null;
+
 		if (!data) return;
+		const decoded = vfx.decode(data);
+
 		this.vfx = vfx.create({
-			data,
+			data: decoded,
 			loop: true,
 			parent: this.refs.wrapper,
 			color: Store.nightMode.current ? '#ffffff' : '#000000',

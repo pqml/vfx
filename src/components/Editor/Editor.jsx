@@ -6,6 +6,7 @@ import './Editor.scss';
 import Store from '~/store/index';
 import EditorCanvas from '../EditorCanvas/EditorCanvas';
 import EditorPreview from '../EditorPreview/EditorPreview';
+import { encode } from '~/vfx/encode';
 
 const TurboMode = [
 	'ARROWRIGHT',
@@ -18,21 +19,19 @@ const Commands = {
 	'ENTER': 'previewVfx',
 	'H': 'toggleHelp',
 	'S': 'exportVfx',
+	'B': 'exportVfx64',
 	'W': 'toggleWireframe',
 	'N': 'toggleNightMode',
 	'Z': 'removePoint',
 	'ARROWRIGHT': 'nextFrame',
 	'ARROWLEFT': 'previousFrame',
 	'BACKSPACE': 'removePoint',
-	'0': 'resetWorkspace',
-	'O': 'resetWorkspace',
-	'SPACE': 'noop',
+	'SPACE': 'resetWorkspace',
 	'SHIFT': 'noop',
 	'ALT': 'noop'
 };
 
-const fakeLink = document.createElement('a');
-Object.assign(fakeLink.style, {
+const hiddenStyle = {
 	position: 'fixed',
 	width: '1px',
 	height: '1px',
@@ -40,7 +39,10 @@ Object.assign(fakeLink.style, {
 	left: 0,
 	opacity: 0.5,
 	overflow: 'hidden'
-});
+};
+
+const fakeLink = document.createElement('a');
+Object.assign(fakeLink.style, hiddenStyle);
 
 export default class Editor extends BaseComponent {
 	noop() {}
@@ -58,6 +60,7 @@ export default class Editor extends BaseComponent {
 		this.pointerX = 0;
 		this.pointerY = 0;
 		this.keysDown = {};
+		this.bind('onImportVfx', 1);
 		window.addEventListener('keydown', this.bind('onKeyDown', 1));
 		window.addEventListener('keyup', this.bind('onKeyUp', 1));
 		window.addEventListener('mousewheel', this.bind('onWheel', 1));
@@ -105,6 +108,7 @@ export default class Editor extends BaseComponent {
 	}
 
 	resetWorkspace() {
+		if (!Store.keyPressed.current.SHIFT) return;
 		Store.zoomOffset.set(0);
 		const pan = Store.panOffset.current;
 		pan[ 0 ] = 0;
@@ -113,6 +117,8 @@ export default class Editor extends BaseComponent {
 	}
 
 	onKeyDown(e) {
+		const tag = e.target.tagName;
+		if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 		const key = e.key === ' ' ? 'SPACE' : e.key.toUpperCase();
 		if (!Commands[ key ] || this.keysDown[ key ]) return;
 		if (!TurboMode.includes(key)) this.keysDown[ key ] = true;
@@ -121,6 +127,8 @@ export default class Editor extends BaseComponent {
 	}
 
 	onKeyUp(e) {
+		const tag = e.target.tagName;
+		if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 		const key = e.key === ' ' ? 'SPACE' : e.key.toUpperCase();
 		if (!Commands[ key ]) return;
 		this.keysDown[ key ] = false;
@@ -128,8 +136,8 @@ export default class Editor extends BaseComponent {
 	}
 
 	previewVfx() {
-		const data = this.getData();
-		Store.previewData.set(Store.previewData.current ? null : data);
+		const base64 = encode(this.getData(), { base64: true });
+		Store.previewData.set(Store.previewData.current ? null : base64);
 	}
 
 	toggleHelp() {
@@ -137,14 +145,24 @@ export default class Editor extends BaseComponent {
 	}
 
 	exportVfx() {
-		const data = this.getData();
-		const header = 'data:text/json;charset=utf-8,';
-		const dataStr = header + encodeURIComponent(JSON.stringify(data));
+		const blob = encode(this.getData());
+		const url = URL.createObjectURL(blob);
 		const name = Store.sourceName.current;
-
 		document.body.appendChild(fakeLink);
-		fakeLink.setAttribute('href', dataStr);
-		fakeLink.setAttribute('download', name + '.json');
+		fakeLink.setAttribute('href', url);
+		fakeLink.setAttribute('download', name + '.vfx');
+		fakeLink.click();
+		document.body.removeChild(fakeLink);
+	}
+
+	exportVfx64() {
+		const data = encode(this.getData(), { base64: true });
+		const name = Store.sourceName.current;
+		const header = 'data:text/plain;charset=utf-8,';
+		const url = header + encodeURIComponent(data);
+		document.body.appendChild(fakeLink);
+		fakeLink.setAttribute('href', url);
+		fakeLink.setAttribute('download', name + '.vfx64');
 		fakeLink.click();
 		document.body.removeChild(fakeLink);
 	}
@@ -176,6 +194,7 @@ export default class Editor extends BaseComponent {
 		const data = {
 			width,
 			height,
+			frameDuration: Store.frameDuration.current,
 			frames: Store.frames.current.map(frame => {
 				const shapes = JSON.parse(JSON.stringify(frame.shapes));
 				const count = shapes.length;

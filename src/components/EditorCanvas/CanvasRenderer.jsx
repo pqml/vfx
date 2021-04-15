@@ -107,8 +107,8 @@ export default class CanvasRenderer extends BaseComponent {
 				ctx.beginPath();
 				for (let j = 0; j < points.length; j++) {
 					const pt = points[ j ];
-					const x = pt[ 0 ] * width;
-					const y = pt[ 1 ] * height;
+					const x = Math.round(pt[ 0 ] * width);
+					const y = Math.round(pt[ 1 ] * height);
 					if (j === 0) ctx.moveTo(x, y);
 					else ctx.lineTo(x, y);
 					hasPoint = true;
@@ -120,8 +120,8 @@ export default class CanvasRenderer extends BaseComponent {
 				if (useWireframe) ctx.stroke();
 				else ctx.fill();
 			} else if (points.length === 1) {
-				const x = points[ 0 ][ 0 ] * width;
-				const y = points[ 0 ][ 1 ] * height;
+				const x = Math.round(points[ 0 ][ 0 ] * width);
+				const y = Math.round(points[ 0 ][ 1 ] * height);
 				ctx.beginPath();
 				ctx.arc(x, y, dpi / 2, 0, TWO_PI);
 				ctx.fill();
@@ -137,11 +137,18 @@ export default class CanvasRenderer extends BaseComponent {
 			ctx.strokeStyle = Store.nightMode.current ? WHITE_SEMI : BLACK_SEMI;
 			ctx.beginPath();
 			ctx.moveTo(lastX, lastY);
-			ctx.lineTo(this.mousePos.x * width, this.mousePos.y * height);
+			ctx.lineTo(
+				Math.round(this.mousePos.x * width),
+				Math.round(this.mousePos.y * height)
+			);
 			ctx.stroke();
 		} else if (!hasPoint || shiftPressed) {
 			ctx.beginPath();
-			ctx.arc(this.mousePos.x * width, this.mousePos.y * height, dpi / 2, 0, TWO_PI);
+			ctx.arc(
+				Math.round(this.mousePos.x * width),
+				Math.round(this.mousePos.y * height),
+				dpi / 2, 0, TWO_PI
+			);
 			ctx.fill();
 		}
 	}

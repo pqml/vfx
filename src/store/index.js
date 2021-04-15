@@ -17,6 +17,7 @@ const Store = {
 	sourceRatio: null,
 
 	rerender: w(false),
+	frameDuration: w(30),
 	frameIndex: w(0),
 	framesCount: null,
 	frames: w([]),

@@ -47,6 +47,18 @@ export default class EditorInfos extends BaseComponent {
 					label='Resolution'
 					value={resolution}
 				/>
+				<li class="editor-info input">
+					<div class="info-label">
+						Frame duration
+					</div>
+					<div class="info-value">
+						<input
+							value={Store.frameDuration}
+							onKeyDown={this.bind('onFrameDurationKeyDown', 1)}
+							onBlur={this.bind('onFrameDurationBlur', 1)}
+						/>
+					</div>
+				</li>
 				<Info
 					classname="frame"
 					label='Current Frame'
@@ -59,5 +71,17 @@ export default class EditorInfos extends BaseComponent {
 				/>
 			</ul>
 		</section>;
+	}
+
+	onFrameDurationKeyDown(e) {
+		if (e.key === 'Enter') e.target.blur();
+	}
+
+	onFrameDurationBlur(e) {
+		let value = e.target.value;
+		value = value.replace(/,/g, '.').replace(/[^0-9.]/g, '');
+		value = isNaN(value) || value < 10 || value > 2000 ? 30 : (+value);
+		e.target.value = value;
+		Store.frameDuration.set(value);
 	}
 }

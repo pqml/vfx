@@ -1,6 +1,7 @@
 import Store from '~/store';
 import BaseComponent from '~/utils/components/BaseComponent/BaseComponent';
 import getMime from '~/utils/getMime';
+import importData from '~/utils/importData/importData';
 import { holdStoreDispatches, releaseStoreDispatches } from '~/utils/state/index';
 import Frame from '../Frame/Frame';
 
@@ -12,39 +13,38 @@ export default class ImportZone extends BaseComponent {
 			<input
 				type="file"
 				onChange={(e) => this.onChange(e)}
+				accept=".json,.vfx,.vfx64,.jpg,.png,.gif"
 				multiple
 			/>
 			<div class="content">
-				<p>Drag or click to import images</p>
+				<p>↳ Drag or click to import images and vfx files</p>
 			</div>
 		</div>;
 	}
 
-	async onChange(e) {
+	async importImages(files) {
+		let name = '';
 		const promises = [];
 		let images = {};
-		let name = '';
 
-		const files = e.target.files;
 		for (let i = 0; i < files.length; i++) {
 			const file = files[ i ];
+			const ext = file.name.split('.').pop();
+			const mime = getMime(ext);
+
+			if (!mime.startsWith('image')) continue;
 			const result = file.name.match(/^(.*[^0-9])([0-9]+)?\.([a-z]{2,4})$/i);
 			if (!result) {
 				console.warn(`${ file.name } cannot be used. Please use image with a naming like Image001.png`);
 				continue;
 			}
+
 			promises.push(new Promise(resolve => {
-				name = result[ 1 ].trim();
 				const index = result[ 2 ] || 0;
-				const ext = result[ 3 ];
-				const mime = getMime(ext);
+				name = result[ 1 ].trim();
 				const reader = new FileReader();
 				const img = document.createElement('img');
-				// img.decoding = 'async';
-				img.onload = () => {
-					images[ index ] = img;
-					resolve();
-				};
+				img.onload = () => resolve(images[ index ] = img);
 				reader.onload = () => {
 					const blob = new Blob([ reader.result ]);
 					img.src = URL.createObjectURL(blob, mime);
@@ -56,17 +56,46 @@ export default class ImportZone extends BaseComponent {
 		await Promise.all(promises);
 
 		images = Object.keys(images).sort().map(k => images[ k ]);
-		if (!images) {
-			console.error('No image can be used.');
-		}
-		const width = images[ 0 ].naturalWidth;
-		const height = images[ 0 ].naturalHeight;
 
-		holdStoreDispatches();
+		if (!images.length) return;
+
 		Store.sourceName.set(name);
-		Store.sourceWidth.set(width);
-		Store.sourceHeight.set(height);
+		Store.sourceWidth.set(images[ 0 ].naturalWidth);
+		Store.sourceHeight.set(images[ 0 ].naturalHeight);
 		Store.frames.set(images.map(img => new Frame({ reference: img })));
-		releaseStoreDispatches();
+	}
+
+	async importData(files) {
+		const promises = [];
+
+		for (let i = 0; i < files.length; i++) {
+			const file = files[ i ];
+			const ext = file.name.split('.').pop();
+			if (ext !== 'json' && ext !== 'vfx' && ext !== 'vfx64') continue;
+			promises.push(importData(file));
+		}
+
+		let datas = await Promise.all(promises);
+		datas = datas.filter(Boolean);
+		if (!datas) return;
+
+		const data = datas[ datas.length - 1 ];
+		if (data.name !== undefined) Store.sourceName.set(data.name);
+		if (data.width) Store.sourceWidth.set(data.width);
+		if (data.height) Store.sourceHeight.set(data.height);
+		if (data.frameDuration) Store.frameDuration.set(data.frameDuration);
+		if (data.frames) Store.frames.set(data.frames);
+	}
+
+	async onChange(e) {
+		const files = e.target.files;
+
+		try {
+			holdStoreDispatches();
+			await this.importImages(files);
+			await this.importData(files);
+		} finally {
+			releaseStoreDispatches();
+		}
 	}
 }

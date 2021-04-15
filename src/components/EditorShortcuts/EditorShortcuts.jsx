@@ -26,19 +26,23 @@ export default class EditorShortcuts extends BaseComponent {
 					text="Display shortcuts"
 				/>
 				<Shortcut
+					key="Enter"
+					text="Preview vfx"
+				/>
+				<Shortcut
 					key="S"
 					text="Export vfx"
 				/>
 				<Shortcut
-					key="Enter"
-					text="Preview vfx"
+					key="B"
+					text="Export vfx as base64"
 				/>
 				<Shortcut
 					key="Space + Mouse"
 					text="Pan and zoom workspace"
 				/>
 				<Shortcut
-					key="0"
+					key="Shift + Space"
 					text="Reset zoom and space"
 				/>
 				<Shortcut
