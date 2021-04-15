@@ -22,6 +22,14 @@ html.grabbing {
 	cursor: grabbing !important;
 }
 
+html:not(.panning) {
+	cursor: crosshair;
+}
+
+html:not(.panning).shift {
+	cursor: copy;
+}
+
 .app {
 	font-weight: 500;
 }

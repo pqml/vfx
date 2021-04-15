@@ -18,6 +18,11 @@ export default class Frame {
 		return count;
 	}
 
+	get shapePointCount() {
+		if (this.shapeIndex < 0) return 0;
+		return this.shapes[ this.shapeIndex ].length;
+	}
+
 	addShape() {
 		if (this.shapeIndex >= 0) {
 			const shape = this.shapes[ this.shapeIndex ];
@@ -26,6 +31,8 @@ export default class Frame {
 		this.shapeIndex++;
 		this.shapes.push([]);
 		triggerUpdate();
+		Store.keyPressed.current.SHIFT = false;
+		Store.keyPressed.set(Store.keyPressed.current, true);
 	}
 
 	removeShape() {

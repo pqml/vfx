@@ -15,10 +15,6 @@
 		display: block;
 	}
 
-	html:not(.panning) & {
-		cursor: crosshair;
-	}
-
 	.canvas-wrapper {
 		position: relative;
 		border: 1px solid var(--c-gray-light);

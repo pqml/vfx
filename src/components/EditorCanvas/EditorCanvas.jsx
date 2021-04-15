@@ -9,6 +9,7 @@ export default class EditorCanvas extends BaseComponent {
 	template() {
 		return <section
 			class="editor-canvas"
+			onMouseMove={this.bind('onMouseMove', 1)}
 			onClick={this.bind('onClick', 1)}
 		>
 			<div
@@ -30,6 +31,10 @@ export default class EditorCanvas extends BaseComponent {
 	onResize(size) {
 		this.refs.wrapper.style.width = size[ 0 ] + 'px';
 		this.refs.wrapper.style.height = size[ 1 ] + 'px';
+	}
+
+	onMouseMove(e) {
+		if (this.refs.renderer) this.refs.renderer.onMouseMove(e);
 	}
 
 	onClick(e) {

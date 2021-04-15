@@ -36,6 +36,12 @@ export default class App extends BaseComponent {
 		this.storeSubscribe(Store.grabbing, grabbing => {
 			html.classList.toggle('grabbing', !!grabbing);
 		});
+
+		this.storeSubscribe(Store.keyPressed, keys => {
+			const frame = Store.frame.current;
+			const points = frame ? frame.shapePointCount : 0;
+			html.classList.toggle('shift', !!keys.SHIFT && points >= 3);
+		});
 	}
 
 	changeCurrentView(hasName) {
