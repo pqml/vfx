@@ -4,21 +4,81 @@ import computed from '~/utils/state/computed';
 
 import './EditorInfos.scss';
 
-const Info = ({ label, value, classname }) => (
+class Input extends BaseComponent {
+	template({ value }) {
+		return <input
+			class={this.props.validation}
+			value={value}
+			onKeyDown={this.bind('keydown', 1)}
+			onBlur={this.bind('submit', 1)}
+		/>;
+	}
+
+	keydown(e) {
+		const validation = this.props.validation;
+
+		if (e.key === 'Enter') e.target.blur();
+		else if (validation === 'number' && e.key === 'ArrowDown') {
+			e.preventDefault();
+			this.updateValue(this.props.value.current - 1);
+		} else if (validation === 'number' && e.key === 'ArrowUp') {
+			e.preventDefault();
+			this.updateValue(this.props.value.current + 1);
+		}
+	}
+
+	updateValue(value) {
+		const validation = this.props.validation;
+		const oldValue = this.base.value;
+		value = value.toString();
+
+		if (validation === 'number') {
+			const max = this.props.max || 3000;
+			const min = this.props.min || 0;
+			value = value.replace(/,/g, '.').replace(/[^0-9.-]/g, '');
+			value = isNaN(value) ? value : (+value);
+			value = Math.min(max, Math.max(min, value));
+		} else if (validation === 'name') {
+			value = value.replace(/[^a-z0-9._-]/ig, '');
+		}
+
+		if (oldValue !== value) this.base.value = value;
+		this.props.value.set(value);
+	}
+
+	submit(e) {
+		this.updateValue(e.target.value);
+	}
+}
+
+const Info = ({ label, value, input, min, max, validation, classname }) => (
 	<li class={"editor-info " + (classname || '')}>
 		<div
 			class="info-label"
 			textContent={label}
 		/>
-		<div
-			class="info-value"
-			textContent={value}
-		/>
+		{
+			input
+				? <div class="info-value">
+					<Input
+						value={input}
+						min={min}
+						max={max}
+						validation={validation}
+					/>
+				</div>
+				: <div
+					class="info-value"
+					textContent={value}
+				/>
+		}
 	</li>);
 
 
 export default class EditorInfos extends BaseComponent {
 	beforeRender(props, state) {
+		this.bind('submit', 1);
+
 		Object.assign(state, {
 			resolution: computed(
 				[ Store.sourceWidth, Store.sourceHeight ],
@@ -36,29 +96,31 @@ export default class EditorInfos extends BaseComponent {
 		});
 	}
 
-	template(props, { resolution, frame, total }) {
+	template(props, { frame, total }) {
 		return <section class="editor-infos">
 			<ul>
 				<Info
+					classname='input'
 					label='Name'
-					value={Store.sourceName}
+					input={Store.sourceName}
+					validation="name"
 				/>
 				<Info
-					label='Resolution'
-					value={resolution}
+					label='Width'
+					input={Store.sourceWidth}
+					validation="number"
 				/>
-				<li class="editor-info input">
-					<div class="info-label">
-						Frame duration
-					</div>
-					<div class="info-value">
-						<input
-							value={Store.frameDuration}
-							onKeyDown={this.bind('onFrameDurationKeyDown', 1)}
-							onBlur={this.bind('onFrameDurationBlur', 1)}
-						/>
-					</div>
-				</li>
+				<Info
+					label='Height'
+					input={Store.sourceHeight}
+					validation="number"
+				/>
+				<Info
+					label='Frame duration'
+					min={10}
+					input={Store.frameDuration}
+					validation="number"
+				/>
 				<Info
 					classname="frame"
 					label='Current Frame'
@@ -71,17 +133,5 @@ export default class EditorInfos extends BaseComponent {
 				/>
 			</ul>
 		</section>;
-	}
-
-	onFrameDurationKeyDown(e) {
-		if (e.key === 'Enter') e.target.blur();
-	}
-
-	onFrameDurationBlur(e) {
-		let value = e.target.value;
-		value = value.replace(/,/g, '.').replace(/[^0-9.]/g, '');
-		value = isNaN(value) || value < 10 || value > 2000 ? 30 : (+value);
-		e.target.value = value;
-		Store.frameDuration.set(value);
 	}
 }

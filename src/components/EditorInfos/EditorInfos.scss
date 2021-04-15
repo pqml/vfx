@@ -29,7 +29,7 @@
 	}
 
 	.editor-info input {
-		width: 3em;
+		width: 4em;
 		border: 1px solid var(--c-gray);
 		border-radius: 5px;
 		text-align: center;
@@ -39,5 +39,13 @@
 
 	.editor-info input:focus {
 		border-color: var(--c-black);
+	}
+
+	input.number {
+		width: 4em;
+	}
+
+	input.name {
+		width: 8em;
 	}
 }

@@ -61,6 +61,14 @@ export default class Editor extends BaseComponent {
 		this.pointerY = 0;
 		this.keysDown = {};
 		this.bind('onImportVfx', 1);
+		this.bind('resizePoints');
+
+		this.prevWidth = Store.sourceWidth.current;
+		this.prevHeight = Store.sourceHeight.current;
+
+		this.storeSubscribe(Store.sourceWidth, this.resizePoints, this, false);
+		this.storeSubscribe(Store.sourceHeight, this.resizePoints, this, false);
+
 		window.addEventListener('keydown', this.bind('onKeyDown', 1));
 		window.addEventListener('keyup', this.bind('onKeyUp', 1));
 		window.addEventListener('mousewheel', this.bind('onWheel', 1));
@@ -78,6 +86,30 @@ export default class Editor extends BaseComponent {
 		window.removeEventListener('pointerup', this.onPointerUp);
 		window.removeEventListener('pointerup', this.onPointerUp);
 		window.removeEventListener('pointermove', this.onPointerMove);
+	}
+
+	resizePoints() {
+		const width = Store.sourceWidth.current;
+		const height = Store.sourceHeight.current;
+
+		const ox = (width - this.prevWidth) / width * 0.5;
+		const mx = this.prevWidth / width;
+		const oy = (height - this.prevHeight) / height * 0.5;
+		const my = this.prevHeight / height;
+
+		const frames = Store.frames.current;
+		frames && frames.forEach(frame => {
+			const shapes = frame.shapes;
+			shapes && shapes.forEach(points => {
+				points.forEach(pt => {
+					pt[ 0 ] = pt[ 0 ] * mx + ox;
+					pt[ 1 ] = pt[ 1 ] * my + oy;
+				});
+			});
+		});
+
+		this.prevWidth = width;
+		this.prevHeight = height;
 	}
 
 	onPointerDown(e) {
