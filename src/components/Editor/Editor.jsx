@@ -28,7 +28,9 @@ const Commands = {
 	'BACKSPACE': 'removePoint',
 	'SPACE': 'resetWorkspace',
 	'SHIFT': 'noop',
-	'ALT': 'noop'
+	'ALT': 'noop',
+	'C': 'copyFrame',
+	'V': 'pasteFrame'
 };
 
 const hiddenStyle = {
@@ -242,6 +244,30 @@ export default class Editor extends BaseComponent {
 		};
 
 		return data;
+	}
+
+	copyFrame() {
+		const frame = Store.frame.current;
+		const data = JSON.stringify({
+			isVfxFrame: true,
+			shapes: frame.shapes,
+			shapeIndex: frame.shapeIndex
+		});
+		navigator.clipboard.writeText(data);
+	}
+
+	async pasteFrame() {
+		try {
+			const data = await navigator.clipboard.readText().then(JSON.parse);
+			if (!data.isVfxFrame) return;
+			const shapes = data.shapes;
+			const shapeIndex = data.shapeIndex;
+			const frame = Store.frame.current;
+			frame.shapes = shapes;
+			frame.shapeIndex = shapeIndex;
+		} catch (err) {
+			// -
+		}
 	}
 
 	toggleWireframe() {

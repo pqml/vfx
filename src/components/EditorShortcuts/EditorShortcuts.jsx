@@ -1,6 +1,5 @@
 import Store from '~/store';
 import BaseComponent from '~/utils/components/BaseComponent/BaseComponent';
-import computed from '~/utils/state/computed';
 
 import './EditorShortcuts.scss';
 
@@ -64,6 +63,10 @@ export default class EditorShortcuts extends BaseComponent {
 				<Shortcut
 					key="N"
 					text="Toggle night mode"
+				/>
+				<Shortcut
+					key="C / V"
+					text="Copy / Paste current frame data"
 				/>
 			</ul>
 		</section>;
